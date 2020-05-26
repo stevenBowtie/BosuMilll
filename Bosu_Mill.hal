@@ -8,12 +8,6 @@ loadrt hostmot2
 loadrt hm2_eth board_ip="192.168.1.121" config=" num_encoders=6 num_pwmgens=6 num_stepgens=0" 
 loadrt pid names=pid.x,pid.y,pid.z,pid.s
 
-loadrt toggle names=toggle.estop
-addf toggle.estop servo-thread
- 	
-loadrt toggle2nist names=toggle2nist.machineReset
-addf toggle2nist.machineReset servo-thread
-
 addf hm2_7i80.0.read          servo-thread
 addf hm2_7i80.0.write         servo-thread
 addf motion-command-handler   servo-thread
@@ -22,6 +16,18 @@ addf pid.x.do-pid-calcs       servo-thread
 addf pid.y.do-pid-calcs       servo-thread
 addf pid.z.do-pid-calcs       servo-thread
 addf pid.s.do-pid-calcs       servo-thread
+
+loadrt 	or2 names=or2.atc-release
+addf	or2.atc-release		servo-thread
+
+loadrt timedelay names=timedelay.hydraulic
+addf timedelay.hydraulic      servo-thread
+
+loadrt toggle names=toggle.estop
+addf toggle.estop servo-thread
+ 	
+loadrt toggle2nist names=toggle2nist.machineReset
+addf toggle2nist.machineReset servo-thread
 
 setp    hm2_7i80.0.pwmgen.pwm_frequency 50000
 setp    hm2_7i80.0.pwmgen.pdm_frequency 6000000
@@ -43,6 +49,9 @@ setp   pid.x.FF0       [AXIS_0]FF0
 setp   pid.x.FF1       [AXIS_0]FF1
 setp   pid.x.FF2       [AXIS_0]FF2
 setp   pid.x.deadband  [AXIS_0]DEADBAND
+  
+#  ---motion control signals---
+
 setp   pid.x.maxoutput [AXIS_0]MAX_OUTPUT
 setp   pid.x.error-previous-target true
 
@@ -151,6 +160,8 @@ setp   pid.z.maxoutput [AXIS_2]MAX_OUTPUT
 setp   pid.z.error-previous-target true
 
 net z-index-enable  <=> pid.z.index-enable
+#  ---motion control signals---
+
 net z-enable        =>  pid.z.enable
 net z-pos-cmd       =>  pid.z.command
 net z-vel-cmd       =>  pid.z.command-deriv
@@ -250,6 +261,8 @@ net jog-z-pos             halui.jog.2.plus
 net jog-z-neg             halui.jog.2.minus
 net jog-z-analog          halui.jog.2.analog
 net jog-selected-pos      halui.jog.selected.plus
+#  ---motion control signals---
+
 net jog-selected-neg      halui.jog.selected.minus
 net spindle-manual-cw     halui.spindle.forward
 net spindle-manual-ccw    halui.spindle.reverse
@@ -272,23 +285,37 @@ net coolant-flood     =>  hm2_7i80.0.gpio.049.out
 net probe-in     =>  motion.probe-input
 
 #  ---digital in / out signals---
-setp hm2_7i80.0.gpio.048.is_output 1
-setp hm2_7i80.0.gpio.048.invert_output 1
-setp hm2_7i80.0.gpio.049.is_output 1
-setp hm2_7i80.0.gpio.055.is_output 1
-setp hm2_7i80.0.gpio.055.invert_output 1
-setp hm2_7i80.0.gpio.058.invert_output 1
-setp hm2_7i80.0.gpio.058.is_output 1
-setp hm2_7i80.0.gpio.049.invert_output 1
-setp hm2_7i80.0.gpio.070.is_opendrain 1
-setp hm2_7i80.0.gpio.071.is_opendrain 1
+setp	hm2_7i80.0.gpio.048.is_output		1
+setp	hm2_7i80.0.gpio.048.invert_output	1
+
+#  ---motion control signals---
+
+setp	hm2_7i80.0.gpio.049.is_output		1
+setp	hm2_7i80.0.gpio.049.invert_output	1
+setp	hm2_7i80.0.gpio.055.is_output		1
+setp	hm2_7i80.0.gpio.055.invert_output	1
+setp	hm2_7i80.0.gpio.056.is_output		1
+setp	hm2_7i80.0.gpio.056.invert_output	1
+setp	hm2_7i80.0.gpio.057.is_output		1
+setp	hm2_7i80.0.gpio.057.invert_output	1
+setp	hm2_7i80.0.gpio.058.is_output		1
+setp	hm2_7i80.0.gpio.058.invert_output	1
+setp	hm2_7i80.0.gpio.070.is_opendrain	1
+setp	hm2_7i80.0.gpio.071.is_opendrain	1
 #  ---estop signals---
 
 net estop-out     <=  iocontrol.0.user-enable-out
 net estop-out     =>  iocontrol.0.emc-enable-in
 
 # ---ATC signals---
-net hydraulic_enable	=>	hm2_7i80.0.gpio.048.out
+setp	timedelay.hydraulic.off-delay	300
+net	hydraulic-enabled	=>	timedelay.hydraulic.out	
+net	hydraulic-enabled	=>	hm2_7i80.0.gpio.048.out
+net	hydraulic-enable	=>	timedelay.hydraulic.in
+net	atc-extend		=>	hm2_7i80.0.gpio.058.out
+net	atc-retract		=>	hm2_7i80.0.gpio.057.out
+net 	atc-release-out		=>	hm2_7i80.0.gpio.056.out
+net	atc-release-out		=>	or2.atc-release.out
 
 #  ---manual tool change signals---
 
@@ -322,6 +349,9 @@ setp axis.2.jog-vel-mode 1
 net start whb04b.start
 net stop  whb04b.stop 
 
+net atc-release-in0		or2.atc-release.in0
+net atc-release-in0		whb04b.macro5
+	
 #  ---motion control signals---
 
 net in-position               <=  motion.in-position

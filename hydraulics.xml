@@ -1,0 +1,27 @@
+<pyvcp>
+	<label>
+		<text>"Hydraulics"</text>
+	</label>
+	<led>
+		<halpin>"hydraulics-enabled"</halpin> 
+	        <size>20</size> 
+		<on_color>"green"</on_color>
+		<off_color>"black"</off_color>
+	</led>
+	<button>
+		<halpin>"start-hydraulics"</halpin>
+		<text>"Start"</text> 
+	</button>
+	<button>
+		<halpin>"atc-extend"</halpin>
+		<text>"ATC Extend"</text> 
+	</button>
+	<button>
+		<halpin>"atc-retract"</halpin>
+		<text>"ATC Retract"</text> 
+	</button>
+	<button>
+		<halpin>"atc-release"</halpin>
+		<text>"Tool Release M5"</text> 
+	</button>
+</pyvcp>
