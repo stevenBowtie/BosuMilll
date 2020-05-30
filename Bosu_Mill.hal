@@ -30,7 +30,7 @@ addf toggle.estop servo-thread
 loadrt toggle2nist names=toggle2nist.machineReset
 addf toggle2nist.machineReset servo-thread
 
-setp    hm2_7i80.0.pwmgen.pwm_frequency 50000
+setp    hm2_7i80.0.pwmgen.pwm_frequency 20000
 setp    hm2_7i80.0.pwmgen.pdm_frequency 6000000
 setp    hm2_7i80.0.watchdog.timeout_ns 5000000
 
@@ -226,8 +226,9 @@ net atc-output        =>  pid.atc.output
 
 # ---PWM Generator signals/setup---
 
-setp   hm2_7i80.0.pwmgen.03.output-type 1
-setp   hm2_7i80.0.pwmgen.03.scale  [AXIS_3]OUTPUT_SCALE
+setp	hm2_7i80.0.pwmgen.03.output-type 1
+setp	hm2_7i80.0.pwmgen.03.scale  [AXIS_3]OUTPUT_SCALE
+#setp	hm2_7i80.0.pwmgen.03.min−dc 0.5
 
 net atc-output                             => hm2_7i80.0.pwmgen.03.value
 net atc-pos-cmd    axis.3.motor-pos-cmd
