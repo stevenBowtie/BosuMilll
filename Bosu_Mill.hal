@@ -18,8 +18,11 @@ addf pid.z.do-pid-calcs       servo-thread
 addf pid.s.do-pid-calcs       servo-thread
 addf pid.atc.do-pid-calcs       servo-thread
 
-loadrt 	or2 names=or2.atc-release
+loadrt 	or2 names=or2.atc-release,or2.atcHYD1,or2.atcHYD2,or2.atcHYD3
 addf	or2.atc-release		servo-thread
+addf	or2.atcHYD1		servo-thread
+addf	or2.atcHYD2		servo-thread
+addf	or2.atcHYD3		servo-thread
 
 loadrt timedelay names=timedelay.hydraulic
 addf timedelay.hydraulic      servo-thread
@@ -376,10 +379,16 @@ setp	timedelay.hydraulic.off-delay	300
 net	hydraulic-enabled	=>	timedelay.hydraulic.out	
 net	hydraulic-enabled	=>	hm2_7i80.0.gpio.048.out
 net	hydraulic-enable	=>	timedelay.hydraulic.in
+net	hydraulic-enable		or2.atcHYD3.out
 net	atc-extend		=>	hm2_7i80.0.gpio.058.out
+net	atc-extend			or2.atcHYD1.in0
 net	atc-retract		=>	hm2_7i80.0.gpio.057.out
+net	atc-retract		=>	or2.atcHYD1.in1
 net 	atc-release-out		=>	hm2_7i80.0.gpio.056.out
 net	atc-release-out		=>	or2.atc-release.out
+net	atc-release-out		=>	or2.atcHYD2.in0
+net	hydraulic-or		or2.atcHYD2.in1		or2.atcHYD1.out
+net	hydraulic-or2		or2.atcHYD3.in0		or2.atcHYD2.out
 
 #  ---manual tool change signals---
 
