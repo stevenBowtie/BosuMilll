@@ -92,7 +92,7 @@ net x-pos-rawcounts        <=  hm2_7i80.0.encoder.00.rawcounts
 
 # ---setup home / limit switch signals---
 
-net x-home-sw     =>  axis.0.home-sw-in
+net x-home-sw     =>  axis.0.home-sw-in		hm2_7i80.0.gpio.071.in
 net x-neg-limit     =>  axis.0.neg-lim-sw-in
 net x-pos-limit     =>  axis.0.pos-lim-sw-in
 
@@ -362,6 +362,8 @@ setp	hm2_7i80.0.gpio.057.is_output		1
 setp	hm2_7i80.0.gpio.057.invert_output	1
 setp	hm2_7i80.0.gpio.058.is_output		1
 setp	hm2_7i80.0.gpio.058.invert_output	1
+setp	hm2_7i80.0.gpio.068.is_opendrain	1
+setp	hm2_7i80.0.gpio.069.is_opendrain	1
 setp	hm2_7i80.0.gpio.070.is_opendrain	1
 setp	hm2_7i80.0.gpio.071.is_opendrain	1
 #  ---estop signals---
@@ -399,15 +401,18 @@ net joginc whb04b.inc
 net joginc axis.0.jog-scale
 net joginc axis.1.jog-scale
 net joginc axis.2.jog-scale
+net joginc axis.3.jog-scale
 
 net jogcnts whb04b.mpg_cnt
 net jogcnts axis.0.jog-counts
 net jogcnts axis.1.jog-counts
 net jogcnts axis.2.jog-counts
+net jogcnts axis.3.jog-counts
 
 setp axis.0.jog-vel-mode 1
 setp axis.1.jog-vel-mode 1
 setp axis.2.jog-vel-mode 1
+setp axis.3.jog-vel-mode 1
 
 net start whb04b.start
 net stop  whb04b.stop 
