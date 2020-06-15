@@ -27,8 +27,9 @@ addf	or2.atcHYD3		servo-thread
 loadrt timedelay names=timedelay.hydraulic
 addf timedelay.hydraulic      servo-thread
 
-loadrt toggle names=toggle.estop
-addf toggle.estop servo-thread
+loadrt toggle names=toggle.estop,toggle.atc-home
+addf toggle.estop	servo-thread
+addf toggle.atc-home	servo-thread
  	
 loadrt toggle2nist names=toggle2nist.machineReset
 addf toggle2nist.machineReset servo-thread
@@ -254,7 +255,8 @@ net atc-pos-rawcounts        <=  hm2_7i80.0.encoder.03.rawcounts
 
 # ---setup home / limit switch signals---
 
-net atc-home-sw     =>  axis.3.home-sw-in
+net atc-home-sw     =>  axis.3.home-sw-in	toggle.atc-home.out
+net atc-home-toggle	toggle.atc-home.in	hm2_7i80.0.encoder.03.input-index
 net atc-neg-limit     =>  axis.3.neg-lim-sw-in
 net atc-pos-limit     =>  axis.3.pos-lim-sw-in
 
