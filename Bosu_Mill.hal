@@ -198,9 +198,9 @@ net z-pos-rawcounts        <=  hm2_7i80.0.encoder.02.rawcounts
 
 # ---setup home / limit switch signals---
 
-net z-home-sw     =>  axis.2.home-sw-in
-net z-neg-limit     =>  axis.2.neg-lim-sw-in
-net z-pos-limit     =>  axis.2.pos-lim-sw-in
+net z-home-sw     =>  axis.2.home-sw-in		hm2_7i80.0.gpio.069.in
+net z-home-sw     =>  axis.2.neg-lim-sw-in
+net z-home-sw     =>  axis.2.pos-lim-sw-in
 
 #*******************
 #  AXIS ATC
