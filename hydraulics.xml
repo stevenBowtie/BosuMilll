@@ -20,8 +20,8 @@
 		<halpin>"atc-retract"</halpin>
 		<text>"ATC Retract"</text> 
 	</button>
-	<button>
+	<checkbutton>
 		<halpin>"atc-release"</halpin>
 		<text>"Tool Release M5"</text> 
-	</button>
+	</checkbutton>
 </pyvcp>
