@@ -378,20 +378,19 @@ net estop-out     =>  iocontrol.0.emc-enable-in
 
 # ---ATC signals---
 setp	timedelay.hydraulic.off-delay	300
-net	hydraulic-enabled	=>	timedelay.hydraulic.out	
-net	hydraulic-enabled	=>	hm2_7i80.0.gpio.048.out
-net	hydraulic-enable	=>	timedelay.hydraulic.in
-net	hydraulic-enable		or2.atcHYD3.out
-net	atc-extend			motion.digital-out-01
-net	atc-extend		=>	hm2_7i80.0.gpio.058.out
-net	atc-extend			or2.atcHYD1.in0
-net	atc-retract		=>	motion.digital-out-02
-net	atc-retract		=>	hm2_7i80.0.gpio.057.out
-net	atc-retract		=>	or2.atcHYD1.in1
-net 	atc-release-out		=>	motion.digital-out-00
-net 	atc-release-out		=>	hm2_7i80.0.gpio.056.out
-#net	atc-release-out		=>	or2.atc-release.out
-net	atc-release-out		=>	or2.atcHYD2.in0
+net	hydraulic-enabled	timedelay.hydraulic.out	
+net	hydraulic-enabled	hm2_7i80.0.gpio.048.out
+net	hydraulic-enable	timedelay.hydraulic.in
+net	hydraulic-enable	or2.atcHYD3.out
+net	atc-extend		motion.digital-out-01
+net	atc-extend		hm2_7i80.0.gpio.058.out
+net	atc-extend		or2.atcHYD1.in0
+net	atc-retract		motion.digital-out-02
+net	atc-retract		hm2_7i80.0.gpio.057.out
+net	atc-retract		or2.atcHYD1.in1
+net 	atc-release-out		or2.atc-release.out		hm2_7i80.0.gpio.056.out
+net	atc-release-out		or2.atcHYD2.in0
+net 	atc-release-in1		or2.atc-release.in1	motion.digital-out-00
 net	hydraulic-or		or2.atcHYD2.in1		or2.atcHYD1.out
 net	hydraulic-or2		or2.atcHYD3.in0		or2.atcHYD2.out
 
@@ -431,8 +430,7 @@ setp axis.3.jog-vel-mode 1
 net start whb04b.start
 net stop  whb04b.stop 
 
-net atc-release-in0		or2.atc-release.in0
-net atc-release-in0		whb04b.macro5
+net atc-release-in0		or2.atc-release.in0		whb04b.macro5
 	
 #  ---motion control signals---
 
