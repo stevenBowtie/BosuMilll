@@ -257,8 +257,8 @@ net atc-pos-rawcounts        <=  hm2_7i80.0.encoder.03.rawcounts
 
 net atc-home-sw     =>  axis.3.home-sw-in	toggle.atc-home.out
 net atc-home-toggle	toggle.atc-home.in	hm2_7i80.0.encoder.03.input-index
-net atc-neg-limit     =>  axis.3.neg-lim-sw-in
-net atc-pos-limit     =>  axis.3.pos-lim-sw-in
+net atc-for-lim		hm2_7i80.0.gpio.068.in	motion.digital-in-00
+net atc-rear-lim	hm2_7i80.0.gpio.067.in	motion.digital-in-01
 
 #*******************
 #  SPINDLE S
