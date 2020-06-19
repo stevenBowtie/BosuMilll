@@ -1,4 +1,5 @@
 (Pocket Table)
+o<m6> sub
 #51 = 102
 #52 = 102
 #53 = 102
@@ -11,18 +12,18 @@
 #60 = 102
 #61 = 102
 #62 = 102
-#<toolToReturn> = #[#<_current_tool>+50]
-#<toolToPickup> = #[#<_selected_tool>+50]
+#<toolToReturnPos> = #[#<_current_tool>+50]
+#<toolToPickupPos> = #[#<_selected_tool>+50]
 (DEBUG, #50)
 M1
-G53 G0 A#<toolToReturn> Z8.32	(Select tool)
+G53 G0 A#<toolToReturnPos> Z8.32	(Select tool)
 M64 P1				(Extend ATC)
 M66 P0 L4 Q15			(Wait for ATC to extend, up to 15s)
 M64 P0				(Release too)
 (Wait for drawbar switch)
 G4 P2
 G53 G0 Z11.75
-G53 G0 A#<toolToPickup>
+G53 G0 A#<toolToPickupPos>
 G53 G1 Z8.1873 F10
 M65 P0
 G4 P2
@@ -31,4 +32,4 @@ M65 P1			(End extend)
 M64 P2			(Retract ATC)
 M66 P1 L4 Q15		(Wait for retract)
 M65 P2			(End retract)
-M2
+o<m6> endsub
