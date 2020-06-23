@@ -56,7 +56,7 @@ o<m6> sub
       M2
     o102 endif
   o100 endif
-  o110 if [#<_selected tool> GT 0 ]
+  o110 if [#<_selected_tool> GT 0 ]
     #<atc_dir> = 1
     o120 if [ #<_selected_tool> LE #<_current_tool> ]
       #<atc_dir> = -1
