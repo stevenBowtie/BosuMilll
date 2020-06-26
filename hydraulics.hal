@@ -1,5 +1,5 @@
 net	hydraulic-enabled	pyvcp.hydraulics-enabled
-net	spindle-rpm-filtered	pyvcp.spindle-speed
+net	spindle-vel-cmd-rpm		pyvcp.spindle-speed
 #net	hydraulic-or3 		pyvcp.start-hydraulics		or2.atcHYD3.in1
 #net	atc-extend		pyvcp.atc-extend
 #net	atc-retract		pyvcp.atc-retract

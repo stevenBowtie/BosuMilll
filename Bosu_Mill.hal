@@ -264,7 +264,7 @@ net atc-rear-lim	hm2_7i80.0.gpio.067.in	motion.digital-in-01
 #  SPINDLE S
 #*******************
 setp	hm2_7i80.0.pwmgen.06.output-type 	3
-setp	hm2_7i80.0.pwmgen.06.scale		2000
+setp	hm2_7i80.0.pwmgen.06.scale		10000
 setp	hm2_7i80.0.gpio.046.is_output		1
 setp	hm2_7i80.0.gpio.046.invert_output	0
 
