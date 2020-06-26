@@ -7,6 +7,7 @@ loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[TRAJ]AX
 loadrt hostmot2
 loadrt hm2_eth board_ip="192.168.1.121" config=" num_encoders=6 num_pwmgens=7 num_stepgens=0" 
 loadrt pid names=pid.x,pid.y,pid.z,pid.s,pid.atc
+loadrt lincurve names=ATCcrv personality=4
 
 addf hm2_7i80.0.read          servo-thread
 addf hm2_7i80.0.write         servo-thread
@@ -17,6 +18,16 @@ addf pid.y.do-pid-calcs       servo-thread
 addf pid.z.do-pid-calcs       servo-thread
 addf pid.s.do-pid-calcs       servo-thread
 addf pid.atc.do-pid-calcs       servo-thread
+
+addf ATCcrv			servo-thread
+setp ATCcrv.x-val-00		-100	
+setp ATCcrv.y-val-00		-100	
+setp ATCcrv.x-val-01		-1	
+setp ATCcrv.y-val-01		-7	
+setp ATCcrv.x-val-02		 1
+setp ATCcrv.y-val-02		 7	
+setp ATCcrv.x-val-03		 100	
+setp ATCcrv.y-val-03		 100	
 
 loadrt 	or2 names=or2.atc-release,or2.atcHYD1,or2.atcHYD2,or2.atcHYD3
 addf	or2.atc-release		servo-thread
@@ -72,7 +83,9 @@ net x-output        =>  pid.x.output
 setp   hm2_7i80.0.pwmgen.00.output-type 1
 setp   hm2_7i80.0.pwmgen.00.scale  [AXIS_0]OUTPUT_SCALE
 
-net x-output                             => hm2_7i80.0.pwmgen.00.value
+#net x-output                             => hm2_7i80.0.pwmgen.00.value
+net x-output		ATCcrv.in 
+net atc-curve		ATCcrv.out		hm2_7i80.0.pwmgen.00.value
 net x-pos-cmd    axis.0.motor-pos-cmd
 net x-enable     axis.0.amp-enable-out  => hm2_7i80.0.pwmgen.00.enable
 
@@ -234,9 +247,11 @@ setp	hm2_7i80.0.pwmgen.03.output-type 1
 setp	hm2_7i80.0.pwmgen.03.scale  [AXIS_3]OUTPUT_SCALE
 #setp	hm2_7i80.0.pwmgen.03.min−dc 0.5
 
-net atc-output                             => hm2_7i80.0.pwmgen.03.value
-net atc-pos-cmd    axis.3.motor-pos-cmd
-net atc-enable     axis.3.amp-enable-out  => hm2_7i80.0.pwmgen.03.enable
+net atc-output		hm2_7i80.0.pwmgen.03.value
+#net atc-output		ATCcrv.in 
+#net atc-curve		ATCcrv.out		hm2_7i80.0.pwmgen.03.value
+net atc-pos-cmd		axis.3.motor-pos-cmd
+net atc-enable		axis.3.amp-enable-out	hm2_7i80.0.pwmgen.03.enable
 
 # ---Encoder feedback signals/setup---
 

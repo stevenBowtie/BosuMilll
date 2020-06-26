@@ -31,4 +31,15 @@
 		<halpin>"atc-release"</halpin>
 		<text>"Tool Release M5"</text> 
 	</checkbutton>
+	<spinbox>
+		<halpin>"atc-spinbox"</halpin>
+		<min_>-100</min_>
+		<max_>100</max_>
+		<initval>0</initval>
+		<resolution>1</resolution>
+	   	<format>"3.3f"</format>
+		<font>("Arial",30)</font>
+	 </spinbox>
+
+
 </pyvcp>
