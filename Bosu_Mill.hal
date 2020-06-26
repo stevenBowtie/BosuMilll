@@ -20,14 +20,14 @@ addf pid.s.do-pid-calcs       servo-thread
 addf pid.atc.do-pid-calcs       servo-thread
 
 addf ATCcrv			servo-thread
-setp ATCcrv.x-val-00		-100	
-setp ATCcrv.y-val-00		-100	
-setp ATCcrv.x-val-01		-1	
-setp ATCcrv.y-val-01		-7	
-setp ATCcrv.x-val-02		 1
-setp ATCcrv.y-val-02		 7	
-setp ATCcrv.x-val-03		 100	
-setp ATCcrv.y-val-03		 100	
+setp ATCcrv.x-val-00		-10
+setp ATCcrv.y-val-00		-10
+setp ATCcrv.x-val-01		-0.1
+setp ATCcrv.y-val-01		-1.5
+setp ATCcrv.x-val-02		 0.1
+setp ATCcrv.y-val-02		 1.5
+setp ATCcrv.x-val-03		 10
+setp ATCcrv.y-val-03		 10
 
 loadrt 	or2 names=or2.atc-release,or2.atcHYD1,or2.atcHYD2,or2.atcHYD3
 addf	or2.atc-release		servo-thread
@@ -85,6 +85,7 @@ setp   hm2_7i80.0.pwmgen.00.scale  [AXIS_0]OUTPUT_SCALE
 
 #net x-output                             => hm2_7i80.0.pwmgen.00.value
 net x-output		ATCcrv.in 
+#net atc-manual-speed	ATCcrv.in 
 net atc-curve		ATCcrv.out		hm2_7i80.0.pwmgen.00.value
 net x-pos-cmd    axis.0.motor-pos-cmd
 net x-enable     axis.0.amp-enable-out  => hm2_7i80.0.pwmgen.00.enable
