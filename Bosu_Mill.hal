@@ -384,10 +384,16 @@ setp	hm2_7i80.0.gpio.058.is_output		1
 setp	hm2_7i80.0.gpio.058.invert_output	1
 setp	hm2_7i80.0.gpio.060.is_output		1
 setp	hm2_7i80.0.gpio.060.invert_output	1
+setp	hm2_7i80.0.gpio.065.is_opendrain	1
+setp	hm2_7i80.0.gpio.066.is_opendrain	1
+setp	hm2_7i80.0.gpio.067.is_opendrain	1
 setp	hm2_7i80.0.gpio.068.is_opendrain	1
 setp	hm2_7i80.0.gpio.069.is_opendrain	1
 setp	hm2_7i80.0.gpio.070.is_opendrain	1
 setp	hm2_7i80.0.gpio.071.is_opendrain	1
+
+#  --Spindle chiller
+net spindle-chiller	hm2_7i80.0.gpio.064.in
 #  ---estop signals---
 
 net estop-out     <=  iocontrol.0.user-enable-out
