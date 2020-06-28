@@ -7,7 +7,7 @@ loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[TRAJ]AX
 loadrt hostmot2
 loadrt hm2_eth board_ip="192.168.1.121" config=" num_encoders=6 num_pwmgens=7 num_stepgens=0" 
 loadrt pid names=pid.x,pid.y,pid.z,pid.s,pid.atc
-loadrt lincurve names=ATCcrv personality=4
+loadrt lincurve names=Xcrv,Ycrv,Zcrv,Acrv,ATCcrv personality=4,4,4,4,4
 
 addf hm2_7i80.0.read          servo-thread
 addf hm2_7i80.0.write         servo-thread
@@ -19,6 +19,46 @@ addf pid.z.do-pid-calcs       servo-thread
 addf pid.s.do-pid-calcs       servo-thread
 addf pid.atc.do-pid-calcs       servo-thread
 
+addf Xcrv			servo-thread
+setp Xcrv.x-val-00		-10
+setp Xcrv.y-val-00		-10
+setp Xcrv.x-val-01		-0.1
+setp Xcrv.y-val-01		-1.5
+setp Xcrv.x-val-02		 0.1
+setp Xcrv.y-val-02		 1.5
+setp Xcrv.x-val-03		 10
+setp Xcrv.y-val-03		 10
+
+addf Ycrv			servo-thread
+setp Ycrv.x-val-00		-10
+setp Ycrv.y-val-00		-10
+setp Ycrv.x-val-01		-0.1
+setp Ycrv.y-val-01		-1.5
+setp Ycrv.x-val-02		 0.1
+setp Ycrv.y-val-02		 1.5
+setp Ycrv.x-val-03		 10
+setp Ycrv.y-val-03		 10
+
+addf Zcrv			servo-thread
+setp Zcrv.x-val-00		-10
+setp Zcrv.y-val-00		-10
+setp Zcrv.x-val-01		-0.1
+setp Zcrv.y-val-01		-1.5
+setp Zcrv.x-val-02		 0.1
+setp Zcrv.y-val-02		 1.5
+setp Zcrv.x-val-03		 10
+setp Zcrv.y-val-03		 10
+
+addf Acrv			servo-thread
+setp Acrv.x-val-00		-10
+setp Acrv.y-val-00		-10
+setp Acrv.x-val-01		-0.1
+setp Acrv.y-val-01		-1.5
+setp Acrv.x-val-02		 0.1
+setp Acrv.y-val-02		 1.5
+setp Acrv.x-val-03		 10
+setp Acrv.y-val-03		 10
+
 addf ATCcrv			servo-thread
 setp ATCcrv.x-val-00		-10
 setp ATCcrv.y-val-00		-10
@@ -28,6 +68,8 @@ setp ATCcrv.x-val-02		 0.1
 setp ATCcrv.y-val-02		 1.5
 setp ATCcrv.x-val-03		 10
 setp ATCcrv.y-val-03		 10
+
+
 
 loadrt 	or2 names=or2.atc-release,or2.atcHYD1,or2.atcHYD2,or2.atcHYD3
 addf	or2.atc-release		servo-thread
@@ -84,9 +126,9 @@ setp   hm2_7i80.0.pwmgen.00.output-type 1
 setp   hm2_7i80.0.pwmgen.00.scale  [AXIS_0]OUTPUT_SCALE
 
 #net x-output                             => hm2_7i80.0.pwmgen.00.value
-net x-output		ATCcrv.in 
-#net atc-manual-speed	ATCcrv.in 
-net atc-curve		ATCcrv.out		hm2_7i80.0.pwmgen.00.value
+net x-output		Xcrv.in 
+#net atc-manual-speed	Xcrv.in 
+net x-curve		Xcrv.out		hm2_7i80.0.pwmgen.00.value
 net x-pos-cmd    axis.0.motor-pos-cmd
 net x-enable     axis.0.amp-enable-out  => hm2_7i80.0.pwmgen.00.enable
 
@@ -141,7 +183,9 @@ net y-output        =>  pid.y.output
 setp   hm2_7i80.0.pwmgen.01.output-type 1
 setp   hm2_7i80.0.pwmgen.01.scale  [AXIS_1]OUTPUT_SCALE
 
-net y-output                             => hm2_7i80.0.pwmgen.01.value
+#net y-output           hm2_7i80.0.pwmgen.01.value
+net y-output		Ycrv.in
+net y-curve		Ycrv.out	hm2_7i80.0.pwmgen.01.value
 net y-pos-cmd    axis.1.motor-pos-cmd
 net y-enable     axis.1.amp-enable-out  => hm2_7i80.0.pwmgen.01.enable
 
@@ -195,7 +239,9 @@ net z-output        =>  pid.z.output
 setp   hm2_7i80.0.pwmgen.02.output-type 1
 setp   hm2_7i80.0.pwmgen.02.scale  [AXIS_2]OUTPUT_SCALE
 
-net z-output                             => hm2_7i80.0.pwmgen.02.value
+#net z-output		hm2_7i80.0.pwmgen.02.value
+net z-output            Zcrv.in
+net z-curve		Zcrv.out	hm2_7i80.0.pwmgen.02.value
 net z-pos-cmd    axis.2.motor-pos-cmd
 net z-enable     axis.2.amp-enable-out  => hm2_7i80.0.pwmgen.02.enable
 
@@ -248,9 +294,9 @@ setp	hm2_7i80.0.pwmgen.03.output-type 1
 setp	hm2_7i80.0.pwmgen.03.scale  [AXIS_3]OUTPUT_SCALE
 #setp	hm2_7i80.0.pwmgen.03.min−dc 0.5
 
-net atc-output		hm2_7i80.0.pwmgen.03.value
-#net atc-output		ATCcrv.in 
-#net atc-curve		ATCcrv.out		hm2_7i80.0.pwmgen.03.value
+#net atc-output		hm2_7i80.0.pwmgen.03.value
+net atc-output		ATCcrv.in 
+net atc-curve		ATCcrv.out		hm2_7i80.0.pwmgen.03.value
 net atc-pos-cmd		axis.3.motor-pos-cmd
 net atc-enable		axis.3.amp-enable-out	hm2_7i80.0.pwmgen.03.enable
 
