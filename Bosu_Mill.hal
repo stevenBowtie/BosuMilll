@@ -317,12 +317,12 @@ net atc-pos-rawcounts        <=  hm2_7i80.0.encoder.03.rawcounts
 
 # ---setup home / limit switch signals---
 
-net atc-home-sw     =>  axis.3.home-sw-in	toggle.atc-home.out
-net atc-home-toggle	toggle.atc-home.in	hm2_7i80.0.encoder.03.input-index
-net atc-for-lim		hm2_7i80.0.gpio.068.in	motion.digital-in-00
-net atc-rear-lim	hm2_7i80.0.gpio.067.in	motion.digital-in-01
-net atc-drawbar-pos	hm2_7i80.0.gpio.060.in
-net atc-no-tool		hm2_7i80.0.gpio.066.in_not
+net atc-home-sw     =>  axis.3.home-sw-in		toggle.atc-home.out
+net atc-home-toggle	toggle.atc-home.in		hm2_7i80.0.encoder.03.input-index
+net atc-for-lim		hm2_7i80.0.gpio.068.in		motion.digital-in-00
+net atc-rear-lim	hm2_7i80.0.gpio.067.in		motion.digital-in-01
+net atc-drawbar-pos	hm2_7i80.0.gpio.060.in		motion.digital-in-02
+net atc-no-tool		hm2_7i80.0.gpio.066.in_not	motion.digital-in-03
 
 #*******************
 #  SPINDLE S
@@ -428,8 +428,7 @@ setp	hm2_7i80.0.gpio.057.is_output		1
 setp	hm2_7i80.0.gpio.057.invert_output	1
 setp	hm2_7i80.0.gpio.058.is_output		1
 setp	hm2_7i80.0.gpio.058.invert_output	1
-setp	hm2_7i80.0.gpio.060.is_output		1
-setp	hm2_7i80.0.gpio.060.invert_output	1
+setp	hm2_7i80.0.gpio.060.is_opendrain	1
 setp	hm2_7i80.0.gpio.065.is_opendrain	1
 setp	hm2_7i80.0.gpio.066.is_opendrain	1
 setp	hm2_7i80.0.gpio.067.is_opendrain	1
