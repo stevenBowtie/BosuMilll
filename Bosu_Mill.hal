@@ -6,7 +6,7 @@ loadrt trivkins
 loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[TRAJ]AXES
 loadrt hostmot2
 loadrt hm2_eth board_ip="192.168.1.121" config=" num_encoders=6 num_pwmgens=7 num_stepgens=0" 
-loadrt pid names=pid.x,pid.y,pid.z,pid.s,pid.atc
+loadrt pid names=pid.x,pid.y,pid.z,pid.a,pid.s,pid.atc
 loadrt lincurve names=Xcrv,Ycrv,Zcrv,Acrv,ATCcrv personality=4,4,4,4,4
 
 addf hm2_7i80.0.read          servo-thread
@@ -16,6 +16,7 @@ addf motion-controller        servo-thread
 addf pid.x.do-pid-calcs       servo-thread
 addf pid.y.do-pid-calcs       servo-thread
 addf pid.z.do-pid-calcs       servo-thread
+addf pid.a.do-pid-calcs       servo-thread
 addf pid.s.do-pid-calcs       servo-thread
 addf pid.atc.do-pid-calcs       servo-thread
 
@@ -80,9 +81,10 @@ addf	or2.atcHYD3		servo-thread
 loadrt timedelay names=timedelay.hydraulic
 addf timedelay.hydraulic      servo-thread
 
-loadrt toggle names=toggle.estop,toggle.atc-home
+loadrt toggle names=toggle.estop,toggle.atc-home,toggle.a-home
 addf toggle.estop	servo-thread
 addf toggle.atc-home	servo-thread
+addf toggle.a-home	servo-thread
  	
 loadrt toggle2nist names=toggle2nist.machineReset
 addf toggle2nist.machineReset servo-thread
@@ -297,8 +299,8 @@ setp	hm2_7i80.0.pwmgen.03.scale  [AXIS_3]OUTPUT_SCALE
 #net atc-output		hm2_7i80.0.pwmgen.03.value
 net atc-output		ATCcrv.in 
 net atc-curve		ATCcrv.out		hm2_7i80.0.pwmgen.03.value
-net atc-pos-cmd		axis.3.motor-pos-cmd
-net atc-enable		axis.3.amp-enable-out	hm2_7i80.0.pwmgen.03.enable
+net atc-pos-cmd		axis.4.motor-pos-cmd
+net atc-enable		axis.4.amp-enable-out	hm2_7i80.0.pwmgen.03.enable
 
 # ---Encoder feedback signals/setup---
 
@@ -309,20 +311,76 @@ setp    hm2_7i80.0.encoder.03.index-mask 0
 setp    hm2_7i80.0.encoder.03.index-mask-invert 0
 setp    hm2_7i80.0.encoder.03.scale  [AXIS_3]ENCODER_SCALE
 
-net atc-pos-fb               <=  hm2_7i80.0.encoder.03.position
-net atc-vel-fb               <=  hm2_7i80.0.encoder.03.velocity
-net atc-pos-fb               =>  axis.3.motor-pos-fb
-net atc-index-enable    axis.3.index-enable  <=>  hm2_7i80.0.encoder.03.index-enable
-net atc-pos-rawcounts        <=  hm2_7i80.0.encoder.03.rawcounts
+net atc-pos-fb		hm2_7i80.0.encoder.03.position
+net atc-vel-fb		hm2_7i80.0.encoder.03.velocity
+net atc-pos-fb		axis.4.motor-pos-fb
+net atc-index-enable    axis.4.index-enable		hm2_7i80.0.encoder.03.index-enable
+net atc-pos-rawcounts	hm2_7i80.0.encoder.03.rawcounts
 
 # ---setup home / limit switch signals---
 
-net atc-home-sw     =>  axis.3.home-sw-in		toggle.atc-home.out
+net atc-home-sw     =>  axis.4.home-sw-in		toggle.atc-home.out
 net atc-home-toggle	toggle.atc-home.in		hm2_7i80.0.encoder.03.input-index
 net atc-for-lim		hm2_7i80.0.gpio.068.in		motion.digital-in-00
 net atc-rear-lim	hm2_7i80.0.gpio.067.in		motion.digital-in-01
 net atc-drawbar-pos	hm2_7i80.0.gpio.060.in		motion.digital-in-02
 net atc-no-tool		hm2_7i80.0.gpio.066.in_not	motion.digital-in-03
+
+#*******************
+#  AXIS A
+#*******************
+
+setp   pid.a.Pgain     [AXIS_4]P
+setp   pid.a.Igain     [AXIS_4]I
+setp   pid.a.Dgain     [AXIS_4]D
+setp   pid.a.bias      [AXIS_4]BIAS
+setp   pid.a.FF0       [AXIS_4]FF0
+setp   pid.a.FF1       [AXIS_4]FF1
+setp   pid.a.FF2       [AXIS_4]FF2
+setp   pid.a.deadband  [AXIS_4]DEADBAND
+setp   pid.a.maxoutput [AXIS_4]MAX_OUTPUT
+setp   pid.a.error-previous-target true
+
+net a-index-enable  <=> pid.a.index-enable
+net a-enable        =>  pid.a.enable
+net a-pos-cmd       =>  pid.a.command
+net a-vel-cmd       =>  pid.a.command-deriv
+net a-pos-fb        =>  pid.a.feedback
+net a-output        =>  pid.a.output
+
+# ---PWM Generator signals/setup---
+
+setp	hm2_7i80.0.pwmgen.04.output-type 1
+setp	hm2_7i80.0.pwmgen.04.scale  [AXIS_4]OUTPUT_SCALE
+
+net a-output		Acrv.in 
+net a-curve		Acrv.out		hm2_7i80.0.pwmgen.04.value
+net a-pos-cmd		axis.3.motor-pos-cmd
+net a-enable		axis.3.amp-enable-out	hm2_7i80.0.pwmgen.04.enable
+
+# ---Encoder feedback signals/setup---
+
+setp    hm2_7i80.0.encoder.04.counter-mode 0
+setp    hm2_7i80.0.encoder.04.filter 1
+setp    hm2_7i80.0.encoder.04.index-invert 0
+setp    hm2_7i80.0.encoder.04.index-mask 0
+setp    hm2_7i80.0.encoder.04.index-mask-invert 0
+setp    hm2_7i80.0.encoder.04.scale  [AXIS_4]ENCODER_SCALE
+
+net a-pos-fb		hm2_7i80.0.encoder.04.position
+net a-vel-fb		hm2_7i80.0.encoder.04.velocity
+net a-pos-fb		axis.3.motor-pos-fb
+net a-index-enable	axis.3.index-enable		hm2_7i80.0.encoder.04.index-enable
+net a-pos-rawcounts	hm2_7i80.0.encoder.04.rawcounts
+
+# ---setup home / limit switch signals---
+
+net a-home-sw		axis.3.home-sw-in		toggle.a-home.out
+net a-home-toggle	toggle.a-home.in		hm2_7i80.0.encoder.04.input-index
+#net a-for-lim		hm2_7i80.0.gpio.068.in		motion.digital-in-00
+#net a-rear-lim		hm2_7i80.0.gpio.067.in		motion.digital-in-01
+#net a-drawbar-pos	hm2_7i80.0.gpio.060.in		motion.digital-in-02
+#net a-no-tool		hm2_7i80.0.gpio.066.in_not	motion.digital-in-03
 
 #*******************
 #  SPINDLE S
