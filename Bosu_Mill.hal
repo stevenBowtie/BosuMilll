@@ -272,15 +272,15 @@ net z-home-sw     =>  axis.2.pos-lim-sw-in
 #  AXIS ATC
 #*******************
 
-setp   pid.atc.Pgain     [AXIS_3]P
-setp   pid.atc.Igain     [AXIS_3]I
-setp   pid.atc.Dgain     [AXIS_3]D
-setp   pid.atc.bias      [AXIS_3]BIAS
-setp   pid.atc.FF0       [AXIS_3]FF0
-setp   pid.atc.FF1       [AXIS_3]FF1
-setp   pid.atc.FF2       [AXIS_3]FF2
-setp   pid.atc.deadband  [AXIS_3]DEADBAND
-setp   pid.atc.maxoutput [AXIS_3]MAX_OUTPUT
+setp   pid.atc.Pgain     [AXIS_4]P
+setp   pid.atc.Igain     [AXIS_4]I
+setp   pid.atc.Dgain     [AXIS_4]D
+setp   pid.atc.bias      [AXIS_4]BIAS
+setp   pid.atc.FF0       [AXIS_4]FF0
+setp   pid.atc.FF1       [AXIS_4]FF1
+setp   pid.atc.FF2       [AXIS_4]FF2
+setp   pid.atc.deadband  [AXIS_4]DEADBAND
+setp   pid.atc.maxoutput [AXIS_4]MAX_OUTPUT
 setp   pid.atc.error-previous-target true
 
 net atc-index-enable  <=> pid.atc.index-enable
@@ -309,7 +309,7 @@ setp    hm2_7i80.0.encoder.03.filter 1
 setp    hm2_7i80.0.encoder.03.index-invert 0
 setp    hm2_7i80.0.encoder.03.index-mask 0
 setp    hm2_7i80.0.encoder.03.index-mask-invert 0
-setp    hm2_7i80.0.encoder.03.scale  [AXIS_3]ENCODER_SCALE
+setp    hm2_7i80.0.encoder.03.scale  [AXIS_4]ENCODER_SCALE
 
 net atc-pos-fb		hm2_7i80.0.encoder.03.position
 net atc-vel-fb		hm2_7i80.0.encoder.03.velocity
@@ -330,15 +330,15 @@ net atc-no-tool		hm2_7i80.0.gpio.066.in_not	motion.digital-in-03
 #  AXIS A
 #*******************
 
-setp   pid.a.Pgain     [AXIS_4]P
-setp   pid.a.Igain     [AXIS_4]I
-setp   pid.a.Dgain     [AXIS_4]D
-setp   pid.a.bias      [AXIS_4]BIAS
-setp   pid.a.FF0       [AXIS_4]FF0
-setp   pid.a.FF1       [AXIS_4]FF1
-setp   pid.a.FF2       [AXIS_4]FF2
-setp   pid.a.deadband  [AXIS_4]DEADBAND
-setp   pid.a.maxoutput [AXIS_4]MAX_OUTPUT
+setp   pid.a.Pgain     [AXIS_3]P
+setp   pid.a.Igain     [AXIS_3]I
+setp   pid.a.Dgain     [AXIS_3]D
+setp   pid.a.bias      [AXIS_3]BIAS
+setp   pid.a.FF0       [AXIS_3]FF0
+setp   pid.a.FF1       [AXIS_3]FF1
+setp   pid.a.FF2       [AXIS_3]FF2
+setp   pid.a.deadband  [AXIS_3]DEADBAND
+setp   pid.a.maxoutput [AXIS_3]MAX_OUTPUT
 setp   pid.a.error-previous-target true
 
 net a-index-enable  <=> pid.a.index-enable
@@ -365,7 +365,7 @@ setp    hm2_7i80.0.encoder.04.filter 1
 setp    hm2_7i80.0.encoder.04.index-invert 0
 setp    hm2_7i80.0.encoder.04.index-mask 0
 setp    hm2_7i80.0.encoder.04.index-mask-invert 0
-setp    hm2_7i80.0.encoder.04.scale  [AXIS_4]ENCODER_SCALE
+setp    hm2_7i80.0.encoder.04.scale  [AXIS_3]ENCODER_SCALE
 
 net a-pos-fb		hm2_7i80.0.encoder.04.position
 net a-vel-fb		hm2_7i80.0.encoder.04.velocity
