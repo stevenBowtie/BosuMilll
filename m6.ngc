@@ -45,7 +45,7 @@ o<m6> sub
   o100 if [ #<_current_tool> GT 0 ]
     #<toolToReturnPos> = #[#<_current_tool>+50]
     G53 G0 Z#<ZPickHeight>	(Retract to safe Z)
-    G53 A#<toolToReturnPos> 
+    G53 B#<toolToReturnPos> 
     M64 P1				(Extend ATC)
     M66 P0 L4 Q15			(Wait for ATC to extend, up to 15s)
     (Halt program if arm did not reach position)
@@ -74,7 +74,7 @@ o<m6> sub
     o120 if [ #<_selected_tool> LE #<_current_tool> ]
       #<atc_dir> = -1
     o120 endif
-    G53 G0 A[ #<toolToPickupPos> * #<atc_dir> ]
+    G53 G0 B[ #<toolToPickupPos> * #<atc_dir> ]
     G53 G1 Z8.1873 F30
     M65 P0
     G4 P2
