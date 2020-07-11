@@ -68,13 +68,13 @@ setp Acrv.y-val-03		 10
 
 addf ATCcrv			servo-thread
 setp ATCcrv.x-val-00		-10
-setp ATCcrv.y-val-00		-10
+setp ATCcrv.y-val-00		-5
 setp ATCcrv.x-val-01		-0.000001
-setp ATCcrv.y-val-01		-0.15
+setp ATCcrv.y-val-01		-0.18
 setp ATCcrv.x-val-02		 0.000001
-setp ATCcrv.y-val-02		 0.15
+setp ATCcrv.y-val-02		 0.18
 setp ATCcrv.x-val-03		 10
-setp ATCcrv.y-val-03		 10
+setp ATCcrv.y-val-03		 5
 
 
 
@@ -302,10 +302,10 @@ setp	hm2_7i80.0.pwmgen.03.output-type 1
 setp	hm2_7i80.0.pwmgen.03.scale  [AXIS_3]OUTPUT_SCALE
 
 net atc-output		limiter.in
-#net limited-speed	limiter.out		ATCcrv.in
-net limited-speed	limiter.out		hm2_7i80.0.pwmgen.03.value
+net limited-speed	limiter.out		ATCcrv.in
+#net limited-speed	limiter.out		hm2_7i80.0.pwmgen.03.value
 #net atc-output		ATCcrv.in 
-#net atc-curve		ATCcrv.out		hm2_7i80.0.pwmgen.03.value
+net atc-curve		ATCcrv.out		hm2_7i80.0.pwmgen.03.value
 #net atc-pos-cmd		axis.4.motor-pos-cmd
 net atc-enable		axis.4.amp-enable-out	hm2_7i80.0.pwmgen.03.enable
 
