@@ -61,14 +61,14 @@ setp Acrv.x-val-03		 10
 setp Acrv.y-val-03		 10
 
 addf ATCcrv			servo-thread
-setp ATCcrv.x-val-00		-10
-setp ATCcrv.y-val-00		-5
+setp ATCcrv.x-val-00		-432
+setp ATCcrv.y-val-00		-432
 setp ATCcrv.x-val-01		-0.000001
-setp ATCcrv.y-val-01		-0.2
+setp ATCcrv.y-val-01		-8
 setp ATCcrv.x-val-02		 0.000001
-setp ATCcrv.y-val-02		 0.2
-setp ATCcrv.x-val-03		 10
-setp ATCcrv.y-val-03		 5
+setp ATCcrv.y-val-02		 8
+setp ATCcrv.x-val-03		 432
+setp ATCcrv.y-val-03		 432
 
 
 
