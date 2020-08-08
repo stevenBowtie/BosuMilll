@@ -416,13 +416,17 @@ net spindle-enable             <=  motion.spindle-on
 net spindle-cw                 <=  motion.spindle-forward
 net spindle-ccw                <=  motion.spindle-reverse
 net spindle-brake              <=  motion.spindle-brake
-net spindle-revs               =>  motion.spindle-revs
+#net spindle-revs               =>  motion.spindle-revs
 net spindle-at-speed           =>  motion.spindle-at-speed
 net spindle-vel-fb-rps         =>  motion.spindle-speed-in
-net spindle-index-enable      <=>  motion.spindle-index-enable
 net spindle-enable		hm2_7i80.0.pwmgen.06.enable
 net spindle-cw      		hm2_7i80.0.gpio.046.out
 net spindle-vel-cmd-rpm		hm2_7i80.0.pwmgen.06.value
+
+setp hm2_7i80.0.encoder.05.scale 	236
+net spindle-pos 		motion.spindle-revs 		hm2_7i80.0.encoder.05.position
+net spindle-index-enable	motion.spindle-index-enable	hm2_7i80.0.encoder.05.index-enable
+
 
 # ---Setup spindle at speed signals---
 sets spindle-at-speed true
