@@ -5,22 +5,27 @@
 	<bar>
 	        <halpin>"spindle-speed"</halpin>
 	        <max_>5000</max_>
-				    </bar>
-	<label>
-		<text>"Hydraulics"</text>
-	</label>
+	</bar>
+<hbox>
 	<led>
 		<halpin>"hydraulics-enabled"</halpin> 
 	        <size>20</size> 
 		<on_color>"green"</on_color>
 		<off_color>"black"</off_color>
 	</led>
+	<label>
+		<text>"Hydraulics"</text>
+	</label>
+</hbox>
+<hbox>
 	<led>
 		<halpin>"indicator"</halpin> 
 	        <size>20</size> 
 		<on_color>"green"</on_color>
 		<off_color>"black"</off_color>
 	</led>
+	<label><text>"Oiler"</text></label>
+</hbox>
 	<button>
 		<halpin>"start-hydraulics"</halpin>
 		<text>"Start"</text> 

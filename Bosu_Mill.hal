@@ -9,7 +9,10 @@ loadrt hm2_eth board_ip="192.168.1.121" config=" num_encoders=6 num_pwmgens=7 nu
 loadrt pid names=pid.x,pid.y,pid.z,pid.a,pid.s,pid.atc
 loadrt lincurve names=Xcrv,Ycrv,Zcrv,Acrv,ATCcrv personality=4,4,4,4,4
 loadrt comp names=oilComp
-loadrt const names=motionThreshold
+loadrt constant names=motionThreshold
+loadrt not names=motionNot
+loadrt timedelay names=timedelay.hydraulic,oilTimer
+
 
 addf hm2_7i80.0.read          servo-thread
 addf hm2_7i80.0.write         servo-thread
@@ -21,8 +24,11 @@ addf pid.z.do-pid-calcs       servo-thread
 addf pid.a.do-pid-calcs       servo-thread
 addf pid.s.do-pid-calcs       servo-thread
 addf pid.atc.do-pid-calcs       servo-thread
+addf	timedelay.hydraulic      servo-thread
+addf	oilTimer		 servo-thread
 addf oilComp			servo-thread
 addf motionThreshold		servo-thread
+addf motionNot			servo-thread
 
 addf Xcrv			servo-thread
 setp Xcrv.x-val-00		-10
@@ -74,16 +80,20 @@ setp ATCcrv.y-val-02		 8
 setp ATCcrv.x-val-03		 432
 setp ATCcrv.y-val-03		 432
 
-setp motionThreshold		
+setp motionThreshold.value	0
+setp oilComp.hyst		0
+net oilComp-in0			motion.current-vel		oilComp.in1
+net oilComp-in1			motionThreshold.out		oilComp.in0
+net motionNot-in		motionNot.in			oilComp.equal
+net motionNot-out		motionNot.out			oilTimer.in
+setp oilTimer.off-delay		300
+net oilTimer-out		oilTimer.out		hm2_7i80.0.gpio.059.out	
 
 loadrt 	or2 names=or2.atc-release,or2.atcHYD1,or2.atcHYD2,or2.atcHYD3
 addf	or2.atc-release		servo-thread
 addf	or2.atcHYD1		servo-thread
 addf	or2.atcHYD2		servo-thread
 addf	or2.atcHYD3		servo-thread
-
-loadrt timedelay names=timedelay.hydraulic
-addf timedelay.hydraulic      servo-thread
 
 loadrt toggle names=toggle.estop,toggle.atc-home,toggle.a-home
 addf toggle.estop	servo-thread
@@ -494,6 +504,9 @@ setp	hm2_7i80.0.gpio.057.is_output		1
 setp	hm2_7i80.0.gpio.057.invert_output	1
 setp	hm2_7i80.0.gpio.058.is_output		1
 setp	hm2_7i80.0.gpio.058.invert_output	1
+#Oiler
+setp	hm2_7i80.0.gpio.059.is_output		1
+setp	hm2_7i80.0.gpio.059.invert_output	1
 setp	hm2_7i80.0.gpio.060.is_opendrain	1
 setp	hm2_7i80.0.gpio.065.is_opendrain	1
 setp	hm2_7i80.0.gpio.066.is_opendrain	1
