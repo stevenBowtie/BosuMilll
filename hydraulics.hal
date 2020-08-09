@@ -6,3 +6,4 @@ net	spindle-vel-cmd-rpm		pyvcp.spindle-speed
 #net	atc-release-in1		pyvcp.atc-release
 #net	atc-release-in1		or2.atc-release.in1
 #net	atc-manual-speed	pyvcp.atc-spinbox
+net 	oilComp.out		pyvcp.indicator

@@ -15,6 +15,12 @@
 		<on_color>"green"</on_color>
 		<off_color>"black"</off_color>
 	</led>
+	<led>
+		<halpin>"indicator"</halpin> 
+	        <size>20</size> 
+		<on_color>"green"</on_color>
+		<off_color>"black"</off_color>
+	</led>
 	<button>
 		<halpin>"start-hydraulics"</halpin>
 		<text>"Start"</text> 

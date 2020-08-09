@@ -8,6 +8,8 @@ loadrt hostmot2
 loadrt hm2_eth board_ip="192.168.1.121" config=" num_encoders=6 num_pwmgens=7 num_stepgens=0" 
 loadrt pid names=pid.x,pid.y,pid.z,pid.a,pid.s,pid.atc
 loadrt lincurve names=Xcrv,Ycrv,Zcrv,Acrv,ATCcrv personality=4,4,4,4,4
+loadrt comp names=oilComp
+loadrt const names=motionThreshold
 
 addf hm2_7i80.0.read          servo-thread
 addf hm2_7i80.0.write         servo-thread
@@ -19,6 +21,8 @@ addf pid.z.do-pid-calcs       servo-thread
 addf pid.a.do-pid-calcs       servo-thread
 addf pid.s.do-pid-calcs       servo-thread
 addf pid.atc.do-pid-calcs       servo-thread
+addf oilComp			servo-thread
+addf motionThreshold		servo-thread
 
 addf Xcrv			servo-thread
 setp Xcrv.x-val-00		-10
@@ -70,7 +74,7 @@ setp ATCcrv.y-val-02		 8
 setp ATCcrv.x-val-03		 432
 setp ATCcrv.y-val-03		 432
 
-
+setp motionThreshold		
 
 loadrt 	or2 names=or2.atc-release,or2.atcHYD1,or2.atcHYD2,or2.atcHYD3
 addf	or2.atc-release		servo-thread
@@ -502,6 +506,9 @@ setp	hm2_7i80.0.gpio.071.is_opendrain	1
 #  --Spindle chiller
 #net spindle-chiller	hm2_7i80.0.gpio.064.in
 #  ---estop signals---
+#
+
+
 
 net estop-out     <=  iocontrol.0.user-enable-out
 net estop-out     =>  iocontrol.0.emc-enable-in
