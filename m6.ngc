@@ -38,7 +38,7 @@ o<m6> sub
   #<ZPickHeight>	= 8.32
   M66 P3 L0
   (DEBUG, Spindle sensor: #5399)
-  o<spindlecheck> if [#5399 EQ 0 AND #<_current_tool> EQ 0]
+  o<spindlecheck> if [#5399 EQ 1 AND #<_current_tool> EQ 0]
     (MSG, ERROR Unexpected tool in spindle)
     o<m6> return
   o<spindlecheck> endif
