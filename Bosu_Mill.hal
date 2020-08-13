@@ -100,8 +100,9 @@ addf toggle.estop	servo-thread
 addf toggle.atc-home	servo-thread
 addf toggle.a-home	servo-thread
  	
-loadrt toggle2nist names=toggle2nist.machineReset
+loadrt toggle2nist names=toggle2nist.machineReset,spindlePendantNIST
 addf toggle2nist.machineReset servo-thread
+addf spindlePendantNIST servo-thread
 
 setp    hm2_7i80.0.pwmgen.pwm_frequency 20000
 setp    hm2_7i80.0.pwmgen.pdm_frequency 32000
@@ -473,7 +474,7 @@ net jog-selected-pos      halui.jog.selected.plus
 net jog-selected-neg      halui.jog.selected.minus
 net spindle-manual-cw     halui.spindle.forward
 net spindle-manual-ccw    halui.spindle.reverse
-net spindle-manual-stop   halui.spindle.stop
+#net spindle-manual-stop   halui.spindle.stop
 net machine-is-on         halui.machine.is-on	toggle2nist.machineReset.is-on 
 net machine-on	          halui.machine.on	toggle2nist.machineReset.on
 net machine-off	          halui.machine.off	toggle2nist.machineReset.off
@@ -582,6 +583,12 @@ net start whb04b.start	halui.program.run
 net stop  whb04b.stop	halui.program.stop 
 
 net atc-release-in0		or2.atc-release.in0		whb04b.macro5
+net spindle-speeddown		whb04b.macro3		halui.spindle.decrease
+net spindle-speedup		whb04b.macro4		halui.spindle.increase
+net spindle-toggle		whb04b.macro8		spindlePendantNIST.in
+net spindleNIST-out-on		halui.spindle.start	spindlePendantNIST.on
+net spindleNIST-out-off		halui.spindle.stop	spindlePendantNIST.off
+net spindleNIST-is-on		halui.spindle.is-on	spindlePendantNIST.is-on 
 	
 #  ---motion control signals---
 
