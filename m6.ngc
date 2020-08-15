@@ -1,9 +1,10 @@
 (Pocket Table)
 o<m6> sub
+  (Turn off digital outputs)
   M65 P0
   M65 P1
   M65 P2
-(DEBUG, Current tool: #<_current_tool>)
+()(DEBUG, Current tool: #<_current_tool>)
   o<toolZero> if[ #<_current_tool> EQ 0.0]
     M61 Q#[4999]
     G43 
@@ -21,7 +22,6 @@ o<m6> sub
 	G43
 	o<m6> return
   o<mtc> endif
-  (Turn off digital outputs)
 
   (Tool Pocket Offsets)
   #51 = 0
@@ -39,33 +39,39 @@ o<m6> sub
 
   #<toolToPickupPos> = #[#<_selected_tool>+50]
   #<ZClearHeight>	= 11.9
-  #<ZPickHeight>	= 8.25
+  #<ZPickHeight>	= 8.2
+  #<ZPocketClear>	= 8.4
   M66 P3 L0
   (DEBUG, Spindle sensor: #5399)
-  o<spindlecheck> if [#5399 EQ 1 AND #<_current_tool> EQ 0]
+  o<spindlecheck> if [#5399 EQ 0 AND #<_current_tool> EQ 0]
     (MSG, ERROR Unexpected tool in spindle)
     o<m6> return
   o<spindlecheck> endif
   o100 if [ #<_current_tool> GT 0 ]
     #<toolToReturnPos> = #[#<_current_tool>+50]
-M1
-    G53 G0 Z#<ZPickHeight>	(Retract to safe Z)
-M1
+
+    G53 G0 Z#<ZPocketClear>	(Retract to safe Z)
+
     G53 B#<toolToReturnPos> 
-M1    M64 P1				(Extend ATC)
+    M64 P1				(Extend ATC)
     M66 P0 L4 Q15			(Wait for ATC to extend, up to 15s)
+    G4 P1
     (Halt program if arm did not reach position)
-G4 P1
-M1
     o101 if [ #5399 LT 0 ]
-      M2
+      (MSG, ATC failed to extend)
+      o<m6> return
     o101 endif
     M64 P0				(Release tool)
     G4 P3
-  (Wait for drawbar switch)
-M1
     G53 G0 Z#<ZClearHeight>
-M1
+    M65 P0				("Close" drawbar and look for tool)
+    G4 P1
+    M66 P2 L0
+    o<drawbarCheck> if [#5399 EQ 0]
+      (MSG, Drawbar did not release tool)
+      o<m6> return
+    o<drawbarCheck>endif
+    M64 P0
     #<toolToReturnPos> = 0
     M61 Q0
     #4999 = 0
@@ -77,7 +83,8 @@ M1
     M66 P0 L4 Q15			(Wait for ATC to extend, up to 15s)
     (Halt program if arm did not reach position)
     o102 if [ #5399 LT 0 ]
-      M2
+      (ATC failed to extend)
+      o<m6> return
     o102 endif
   o100 endif
   o110 if [#<_selected_tool> GT 0 ]
@@ -85,22 +92,22 @@ M1
     o120 if [ #<_selected_tool> LE #<_current_tool> ]
       #<atc_dir> = -1
     o120 endif
-M1
+
     G53 G0 B[ #<toolToPickupPos> * #<atc_dir> ]
-M1
+
     G53 G1 Z8.1873 F60
-M1
+
     M65 P0
     G4 P2
-  M66 P3 L0
-  o<drawbarCheck> if [#5399 EQ 0]
+  M66 P2 L0
+  o<drawbarCheck2> if [#5399 EQ 1]
     (MSG, Drawbar did not grab tool)
-    M2
-  o<drawbarCheck>endif
-M1
-    G53 G0 Z8.32
+    o<m6> return
+  o<drawbarCheck2>endif
+
+    G53 G0 Z#<ZPocketClear>
   o110 else
-M1
+
     G53 G0 Z#<ZClearHeight>
   o110 endif
   M65 P1			(End extend)
