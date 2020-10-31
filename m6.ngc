@@ -39,7 +39,7 @@ o<m6> sub
 
   #<toolToPickupPos> = #[#<_selected_tool>+50]
   #<ZClearHeight>	= 11.9
-  #<ZPickHeight>	= 8.18
+  #<ZPickHeight>	= 8.14
   #<ZPocketClear>	= 8.4
   M66 P2 L0
   (DEBUG, Spindle sensor: #5399)
