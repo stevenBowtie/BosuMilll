@@ -1,8 +1,8 @@
 net	hydraulic-enabled	pyvcp.hydraulics-enabled
 net	spindle-vel-cmd-rpm	pyvcp.spindle-speed
 #net	hydraulic-or3 		pyvcp.start-hydraulics		or2.atcHYD3.in1
-#net	atc-extend		pyvcp.atc-extend
-#net	atc-retract		pyvcp.atc-retract
+net	atc-extend		pyvcp.atc-extend
+net	atc-retract		pyvcp.atc-retract
 #net	atc-release-in1		pyvcp.atc-release
 #net	atc-release-in1		or2.atc-release.in1
 #net	atc-manual-speed	pyvcp.atc-spinbox
