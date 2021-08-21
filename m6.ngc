@@ -5,7 +5,7 @@ o<m6> sub
   M65 P1
   M65 P2
 
-  o<toolZero> if[ #<_current_tool> EQ 0.0]
+  o<toolZero> if[ #<_current_tool> EQ 0.0 AND  #<_selected_tool> EQ 0.0 ]
     (DEBUG, [#4999])
     T[#4999]
     M61 Q[#4999]
@@ -53,7 +53,7 @@ o<m6> sub
   o<spindlecheck> endif
 
 (Manual tool change)
-  o<mtc> if [ #40 EQ 1 OR #<_selected_tool> GT 12]
+  o<mtc> if [ #40 NE 1 OR #<_selected_tool> GT 12]
 	G53 G0 Z11.5
 	(DEBUG, Insert tool #<_selected_tool> )
 	M0
