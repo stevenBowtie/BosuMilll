@@ -444,7 +444,7 @@ net machine-is-on		hm2_7i80.0.pwmgen.06.enable
 net spindle-cw      		hm2_7i80.0.gpio.046.out
 net spindle-vel-cmd-rpm		limit.spindle.in
 net spindle-vel-cmd-limited	limit.spindle.out 	  	hm2_7i80.0.pwmgen.06.value
-net spindle-fault		hm2_7i80.0.gpio.063.in_not	axis.0.amp-fault-in
+net spindle-fault		hm2_7i80.0.gpio.063.in_not		axis.0.amp-fault-in
 net spindle-fault		SpindleFault.trigger		SpindleFault.force
 
 setp hm2_7i80.0.encoder.05.scale 	236
