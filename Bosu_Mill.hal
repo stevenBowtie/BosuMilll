@@ -7,6 +7,7 @@ loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[TRAJ]AX
 loadrt hostmot2
 loadrt hm2_eth board_ip="192.168.1.121" config=" num_encoders=6 num_pwmgens=7 num_stepgens=0" 
 loadrt pid names=pid.x,pid.y,pid.z,pid.a,pid.s,pid.atc
+loadrt limit1 names=limit.spindle
 loadrt lincurve names=Xcrv,Ycrv,Zcrv,Acrv,ATCcrv personality=4,4,4,4,4
 loadrt comp names=oilComp
 loadrt constant names=motionThreshold
@@ -23,9 +24,10 @@ addf pid.y.do-pid-calcs       servo-thread
 addf pid.z.do-pid-calcs       servo-thread
 addf pid.a.do-pid-calcs       servo-thread
 addf pid.s.do-pid-calcs       servo-thread
+addf limit.spindle	      servo-thread
 addf pid.atc.do-pid-calcs       servo-thread
-addf	timedelay.hydraulic      servo-thread
-addf	oilTimer		 servo-thread
+addf timedelay.hydraulic      servo-thread
+addf oilTimer			 servo-thread
 addf oilComp			servo-thread
 addf motionThreshold		servo-thread
 addf motionNot			servo-thread
@@ -405,6 +407,8 @@ setp	hm2_7i80.0.pwmgen.06.scale		10000
 setp	hm2_7i80.0.gpio.046.is_output		1
 setp	hm2_7i80.0.gpio.046.invert_output	0
 
+setp   limit.spindle.max	5000
+setp   limit.spindle.min	0
 setp   pid.s.Pgain     [SPINDLE_9]P
 setp   pid.s.Igain     [SPINDLE_9]I
 setp   pid.s.Dgain     [SPINDLE_9]D
@@ -436,7 +440,8 @@ net spindle-vel-fb-rps         =>  motion.spindle-speed-in
 #net spindle-enable             <=  motion.spindle-on
 net machine-is-on		hm2_7i80.0.pwmgen.06.enable
 net spindle-cw      		hm2_7i80.0.gpio.046.out
-net spindle-vel-cmd-rpm		hm2_7i80.0.pwmgen.06.value
+net spindle-vel-cmd-rpm		limit.spindle.in
+net spindle-vel-cmd-limited	limit.spindle.out 	hm2_7i80.0.pwmgen.06.value
 
 setp hm2_7i80.0.encoder.05.scale 	236
 net spindle-pos 		motion.spindle-revs 		hm2_7i80.0.encoder.05.position
@@ -486,9 +491,6 @@ net MDI-mode              halui.mode.is-mdi
 net coolant-mist	iocontrol.0.coolant-mist	hm2_7i80.0.gpio.050.out
 net coolant-flood	iocontrol.0.coolant-flood	hm2_7i80.0.gpio.049.out
 
-#  ---probe signal---
-
-net probe-in     =>  motion.probe-input
 
 #  ---digital in / out signals---
 setp	hm2_7i80.0.gpio.048.is_output		1
@@ -508,14 +510,18 @@ setp	hm2_7i80.0.gpio.058.invert_output	1
 #Oiler
 setp	hm2_7i80.0.gpio.059.is_output		1
 setp	hm2_7i80.0.gpio.059.invert_output	1
-setp	hm2_7i80.0.gpio.060.is_opendrain	1
+setp	hm2_7i80.0.gpio.060.is_opendrain	1 #Probe input
+setp	hm2_7i80.0.gpio.061.is_opendrain	1
+setp	hm2_7i80.0.gpio.062.is_opendrain	1
+setp	hm2_7i80.0.gpio.063.is_opendrain	1
+setp	hm2_7i80.0.gpio.064.is_opendrain	1 #Drawbar pos
 setp	hm2_7i80.0.gpio.065.is_opendrain	1
 setp	hm2_7i80.0.gpio.066.is_opendrain	1
 setp	hm2_7i80.0.gpio.067.is_opendrain	1
 setp	hm2_7i80.0.gpio.068.is_opendrain	1
 setp	hm2_7i80.0.gpio.069.is_opendrain	1
 setp	hm2_7i80.0.gpio.070.is_opendrain	1
-setp	hm2_7i80.0.gpio.071.is_opendrain	1
+setp	hm2_7i80.0.gpio.071.is_opendrain	1 
 
 #  --Spindle chiller
 #net spindle-chiller	hm2_7i80.0.gpio.064.in
@@ -523,6 +529,8 @@ setp	hm2_7i80.0.gpio.071.is_opendrain	1
 #
 
 
+#  ---probe signal---
+net probe-in 	hm2_7i80.0.gpio.062.in    motion.probe-input
 
 net estop-out     <=  iocontrol.0.user-enable-out
 net estop-out     =>  iocontrol.0.emc-enable-in

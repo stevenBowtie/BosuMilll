@@ -38,7 +38,7 @@ o<m6> sub
   #<ZPocketClear>	= 8.4
   #<returnedTool>	= #<_current_tool>
 
-
+  o200 call
   o<mtr> if [ #<_current_tool> GT 12]
 	G53 G0 Z#<ZClearHeight>
 	(DEBUG, Remove Tool and press RESUME)
