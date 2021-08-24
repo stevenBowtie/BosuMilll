@@ -13,6 +13,7 @@ loadrt comp names=oilComp
 loadrt constant names=motionThreshold
 loadrt not names=motionNot
 loadrt timedelay names=timedelay.hydraulic,oilTimer
+loadrt message names=SpindleFault messages="Spindle fault"
 
 
 addf hm2_7i80.0.read          servo-thread
@@ -31,6 +32,7 @@ addf oilTimer			 servo-thread
 addf oilComp			servo-thread
 addf motionThreshold		servo-thread
 addf motionNot			servo-thread
+addf SpindleFault		servo-thread
 
 addf Xcrv			servo-thread
 setp Xcrv.x-val-00		-10
@@ -408,7 +410,7 @@ setp	hm2_7i80.0.gpio.046.is_output		1
 setp	hm2_7i80.0.gpio.046.invert_output	0
 
 setp   limit.spindle.max	5000
-setp   limit.spindle.min	0
+setp   limit.spindle.min	-5000
 setp   pid.s.Pgain     [SPINDLE_9]P
 setp   pid.s.Igain     [SPINDLE_9]I
 setp   pid.s.Dgain     [SPINDLE_9]D
@@ -441,7 +443,9 @@ net spindle-vel-fb-rps         =>  motion.spindle-speed-in
 net machine-is-on		hm2_7i80.0.pwmgen.06.enable
 net spindle-cw      		hm2_7i80.0.gpio.046.out
 net spindle-vel-cmd-rpm		limit.spindle.in
-net spindle-vel-cmd-limited	limit.spindle.out 	hm2_7i80.0.pwmgen.06.value
+net spindle-vel-cmd-limited	limit.spindle.out 	  	hm2_7i80.0.pwmgen.06.value
+net spindle-fault		hm2_7i80.0.gpio.063.in_not	axis.0.amp-fault-in
+net spindle-fault		SpindleFault.trigger		SpindleFault.force
 
 setp hm2_7i80.0.encoder.05.scale 	236
 net spindle-pos 		motion.spindle-revs 		hm2_7i80.0.encoder.05.position
