@@ -13,7 +13,7 @@ loadrt comp names=oilComp
 loadrt constant names=motionThreshold
 loadrt not names=motionNot
 loadrt timedelay names=timedelay.hydraulic,oilTimer
-loadrt message names=SpindleFault messages="Spindle fault"
+loadrt message names=SpindleFault,floodCoolantLow messages="Spindle fault,Flood Coolant Low"
 
 
 addf hm2_7i80.0.read          servo-thread
@@ -33,6 +33,7 @@ addf oilComp			servo-thread
 addf motionThreshold		servo-thread
 addf motionNot			servo-thread
 addf SpindleFault		servo-thread
+addf floodCoolantLow		servo-thread
 
 addf Xcrv			servo-thread
 setp Xcrv.x-val-00		-10
@@ -444,7 +445,7 @@ net machine-is-on		hm2_7i80.0.pwmgen.06.enable
 net spindle-cw      		hm2_7i80.0.gpio.046.out
 net spindle-vel-cmd-rpm		limit.spindle.in
 net spindle-vel-cmd-limited	limit.spindle.out 	  	hm2_7i80.0.pwmgen.06.value
-net spindle-fault		hm2_7i80.0.gpio.063.in_not		axis.0.amp-fault-in
+net spindle-fault		hm2_7i80.0.gpio.063.in_not	axis.0.amp-fault-in
 net spindle-fault		SpindleFault.trigger		SpindleFault.force
 
 setp hm2_7i80.0.encoder.05.scale 	236
@@ -514,9 +515,9 @@ setp	hm2_7i80.0.gpio.058.invert_output	1
 #Oiler
 setp	hm2_7i80.0.gpio.059.is_output		1
 setp	hm2_7i80.0.gpio.059.invert_output	1
-setp	hm2_7i80.0.gpio.060.is_opendrain	1 #Probe input
+setp	hm2_7i80.0.gpio.060.is_opendrain	1 #Flood coolant level
 setp	hm2_7i80.0.gpio.061.is_opendrain	1
-setp	hm2_7i80.0.gpio.062.is_opendrain	1
+setp	hm2_7i80.0.gpio.062.is_opendrain	1 #Probe input
 setp	hm2_7i80.0.gpio.063.is_opendrain	1
 setp	hm2_7i80.0.gpio.064.is_opendrain	1 #Drawbar pos
 setp	hm2_7i80.0.gpio.065.is_opendrain	1
@@ -532,7 +533,8 @@ setp	hm2_7i80.0.gpio.071.is_opendrain	1
 #  ---estop signals---
 #
 
-
+net flood-coolant-low	hm2_7i80.0.gpio.060.in		axis.1.amp-fault-in
+net flood-coolant-low	floodCoolantLow.trigger		floodCoolantLow.force
 #  ---probe signal---
 net probe-in 	hm2_7i80.0.gpio.062.in    motion.probe-input
 
