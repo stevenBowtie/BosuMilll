@@ -39,7 +39,10 @@ o<m6> sub
   #<ZPocketClear>	= 8.4
   #<returnedTool>	= #<_current_tool>
 
-  o200 call
+  o091 if [ #41 eq 1 ]
+    o200 call
+  o091 endif
+
   o<mtr> if [ #<_current_tool> GT 12]
 	G53 G0 Z#<ZClearHeight>
 	(DEBUG, Remove Tool and press RESUME)
@@ -51,6 +54,7 @@ o<m6> sub
   o<spindlecheck> if [#5399 EQ 0 AND #<_current_tool> EQ 0]
     (MSG, ERROR Unexpected tool in spindle)
     M101 P2
+    M0
     o<m6> return
   o<spindlecheck> endif
 
@@ -76,7 +80,8 @@ o<m6> sub
     (Halt program if arm did not reach position)
     o101 if [ #5399 LT 0 ]
       (MSG, ATC failed to extend)
-    M101 P2
+      M101 P2
+      M0
       o<m6> return
     o101 endif
     M64 P0				(Release tool)
@@ -87,7 +92,8 @@ o<m6> sub
     M66 P2 L0
     o<drawbarCheck> if [#5399 EQ 0]
       (MSG, Drawbar did not release tool)
-    M101 P2
+      M101 P2
+      M0
       o<m6> return
     o<drawbarCheck>endif
     M65 P0
@@ -101,7 +107,8 @@ o<m6> sub
     (Halt program if arm did not reach position)
     o102 if [ #5399 LT 0 ]
       (ATC failed to extend)
-    M101 P2
+      M101 P2
+      M0
       o<m6> return
     o102 endif
   o100 endif
@@ -121,6 +128,7 @@ o<m6> sub
   o<drawbarCheck2> if [#5399 EQ 1]
     (MSG, Drawbar did not grab tool)
     M101 P2
+    M0
     o<m6> return
   o<drawbarCheck2>endif
 
